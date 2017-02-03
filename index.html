@@ -353,7 +353,7 @@
               <br><br>
 
               <span id="thankyou" style="display:none">Thank you so much!<br>That is more than awesome.<br>You are the winner!</span>
-              <span id="error" style="display:none">Some error. <a href="javascript:location.reload()">Reload</a></span>
+              <span id="error" style="display:none">Error: <span id="exact-error"></span> <a href="javascript:location.reload()">Reload</a></span>
 
               <input type="range" min="1" max="100" step="1" value="1" id="equity-slider" class="payments"><br>
               <span id="equity-value" style="width: 60px; display:inline-block" class="payments"></span>
@@ -439,6 +439,7 @@
               $("#thankyou").show();
             } else {
               $("#error").show();
+              $("#exact-error").text(response.message);
             }
 
           });
