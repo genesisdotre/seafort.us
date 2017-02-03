@@ -343,13 +343,12 @@
         <!-- Seven -->
           <section class="wrapper style1 align-center">
             <div class="inner medium">
-              <h2>No fluff</h2>
-              <h3>Show me the money!</h3>
+              <h2>Show me the money</h2>
               <p>Ideally we would like to find a single investor - to reduce the housekeeping burden.<p>
               <p>With that said it may be more likely to receive money from multiple sources</p>
 
-              <span class="currency button special" id="USD">USD</span>
-              <span class="currency button" id="GBP">GBP</span>
+              <span class="payments currency button special" id="USD">USD</span>
+              <span class="payments currency button" id="GBP">GBP</span>
 
               <br><br>
 
@@ -357,7 +356,7 @@
               <span id="error" style="display:none">Some error. <a href="javascript:location.reload()">Reload</a></span>
 
               <input type="range" min="1" max="100" step="1" value="1" id="equity-slider" class="payments"><br>
-              <span id="equity-value" style="width: 40px; display:inline-block" class="payments"></span>
+              <span id="equity-value" style="width: 60px; display:inline-block" class="payments"></span>
               <span id="equity-cost" class="payments"></span>
 
               <br><br>
@@ -382,7 +381,15 @@
     <script>
       var valString;
       var valNumber;
-      var currency = "USD";
+      var currency = "usd";
+
+      var _pluraliseUnits = function(num) {
+        if (num > 1) {
+          return num + " units";
+        } else {
+          return num + " unit";
+        }
+      }
 
       $(".button.currency").click(function() {
         $(".button.currency").removeClass("special");
@@ -394,12 +401,12 @@
       var _handler = function() {
         valString = $("#equity-slider").val();
         valNumber = parseFloat(valString);
-        $("#equity-value").html(valNumber.toFixed(1) + " units");
+        $("#equity-value").html(_pluraliseUnits(valNumber));
         $("#equity-cost").html(currency === "usd" ? ("$" + (valNumber * 10000)) : ("£" + (valNumber * 8000)));
 
-        $("#paypal-name").attr("value", valString + " units");
+        $("#paypal-name").attr("value", _pluraliseUnits(valNumber));
         $("#paypal-amount").attr("value", currency === "usd" ? (valNumber * 10000) : (valNumber * 8000));
-        $("#paypal-currency").attr("value", currency);
+        $("#paypal-currency").attr("value", currency.toUpperCase());
       };
 
       $("#equity-slider").on("change", _handler)
@@ -419,8 +426,8 @@
             howmany : currency === "usd" ? (valNumber * 1000000) : (valNumber * 800000)
           };
 
-          //$.post("http://localhost:3002/charge", data, function(response) {
-          $.post("https://genesis-charge.herokuapp.com/charge", data, function(response) {
+          $.post("http://localhost:3002/charge", data, function(response) {
+          // $.post("https://genesis-charge.herokuapp.com/charge", data, function(response) {
             console.log(response);
 
             // alert(response + "\r\nwhich is as you can tell is " + (response === "OK" ? "super cool" : "not that good"));
@@ -442,7 +449,7 @@
         // Open Checkout with further options
         handler.open({
           name: 'seafort.us',
-          description: valNumber.toFixed(1) + " units",
+          description: _pluraliseUnits(valNumber),
           currency: currency,
           amount: currency === "usd" ? (valNumber * 1000000) : (valNumber * 800000)
         });
