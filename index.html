@@ -423,7 +423,8 @@
 
           var data = {
             id : token.id,
-            howmany : currency === "usd" ? (valNumber * 1000000) : (valNumber * 800000)
+            howmany : currency === "usd" ? (valNumber * 1000000) : (valNumber * 800000),
+            currency : currency
           };
 
           // $.post("http://localhost:3002/charge", data, function(response) {
